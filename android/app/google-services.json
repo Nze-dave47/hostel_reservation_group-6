@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1053110957892",
+    "project_id": "hostelreservation-1defd",
+    "storage_bucket": "hostelreservation-1defd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1053110957892:android:3f62ad94a8ad058499c911",
+        "android_client_info": {
+          "package_name": "com.example.hostel_reservation"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTtBA1E8z9GxGYZQ2b0T2JmmS8JcFZtjw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
