@@ -7,6 +7,9 @@ import 'screens/home_screen.dart';
 import 'screens/hostel_list_screen.dart';
 import 'screens/hostel_detail_screen.dart';
 import 'screens/room_selection_screen.dart';
+import 'screens/complaint_page.dart';
+import 'screens/review_page.dart';
+import 'screens/feedback_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,10 +24,12 @@ void main() async {
 final _router = GoRouter(
   routes: [
     GoRoute(path: '/', builder: (context, state) => const HomeScreen()),
+
     GoRoute(
       path: '/hostels',
       builder: (context, state) => const HostelListScreen(),
     ),
+
     GoRoute(
       path: '/hostel/:id',
       builder: (context, state) {
@@ -33,12 +38,28 @@ final _router = GoRouter(
         return HostelDetailScreen(hostelId: id, hostelData: data);
       },
     ),
+
     GoRoute(
       path: '/hostel/:id/rooms',
       builder: (context, state) {
         final id = state.pathParameters['id']!;
         return RoomSelectionScreen(hostelId: id);
       },
+    ),
+
+    GoRoute(
+      path: '/complaints',
+      builder: (context, state) => ComplaintPage(),
+    ),
+
+    GoRoute(
+      path: '/reviews',
+      builder: (context, state) => ReviewPage(),
+    ),
+
+    GoRoute(
+      path: '/feedback',
+      builder: (context, state) => FeedbackScreen(),
     ),
   ],
 );
