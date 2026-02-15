@@ -89,7 +89,7 @@ user/
     └── user_dependency_injection.dart
 ```
 
-## **Contributors**
+### **Contributors**
 
 
 - Ibiam Idika 20231390342
@@ -111,3 +111,4 @@ user/
 20231390652
 - Uche Ezeanyika Davis 
 20231391692
+- Inyama Prince Chinedu 20231377992
