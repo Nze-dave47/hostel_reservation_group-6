@@ -44,7 +44,7 @@ class HostelListScreen extends StatelessWidget {
                 ),
                 child: InkWell(
                   onTap: () {
-                    context.push('/hostel/${hostel.id}', extra: data);
+                    context.go('/hostel/${hostel.id}', extra: data);
                   },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
