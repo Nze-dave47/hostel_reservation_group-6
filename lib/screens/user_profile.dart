@@ -72,7 +72,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
 
     if (confirmed == true) {
       await _auth.signOut();
-      if (mounted) context.go('/login'); // adjust route as needed
+      if (mounted) context.go('/signin'); // adjust route as needed
     }
   }
 
@@ -678,9 +678,7 @@ class _UserDetailsTabState extends State<_UserDetailsTab> {
             _infoRow(
               Icons.email_rounded,
               'Email',
-              widget.userData?['email'] ??
-                  FirebaseAuth.instance.currentUser?.email ??
-                  'Not set',
+              widget.userData?['email'] ?? 'Not set',
             ),
             _infoRow(
               Icons.phone_rounded,
