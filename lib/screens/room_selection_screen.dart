@@ -51,26 +51,26 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
         elevation: 0,
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         iconTheme: const IconThemeData(color: Colors.black),
-        actions: [
-          if (currentUser != null)
-            Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: Row(
-                children: [
-                  const Icon(Icons.person, size: 20, color: Colors.green),
-                  const SizedBox(width: 4),
-                  Text(
-                    currentUser.email?.split('@')[0] ?? 'User',
-                    style: const TextStyle(
-                      color: Colors.green,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-        ],
+        // actions: [
+        //   if (currentUser != null)
+        //     // Padding(
+        //     //   padding: const EdgeInsets.only(right: 16),
+        //     //   child: Row(
+        //     //     children: [
+        //     //       const Icon(Icons.person, size: 20, color: Colors.green),
+        //     //       const SizedBox(width: 4),
+        //     //       Text(
+        //     //         currentUser.email?.split('@')[0] ?? 'User',
+        //     //         style: const TextStyle(
+        //     //           color: Colors.green,
+        //     //           fontSize: 14,
+        //     //           fontWeight: FontWeight.w500,
+        //     //         ),
+        //     //       ),
+        //     //     ],
+        //     //   ),
+        //     // ),
+        // ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -361,33 +361,33 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
                 child: Column(
                   children: [
                     // Show user info if logged in
-                    if (currentUser != null) ...[
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.green.shade50,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.green.shade200),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.check_circle, color: Colors.green, size: 20),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                'Booking as: ${currentUser.email}',
-                                style: const TextStyle(
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                    ],
+                    // if (currentUser != null) ...[
+                    //   Container(
+                    //     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    //     decoration: BoxDecoration(
+                    //       color: Colors.green.shade50,
+                    //       borderRadius: BorderRadius.circular(8),
+                    //       border: Border.all(color: Colors.green.shade200),
+                    //     ),
+                    //     child: Row(
+                    //       children: [
+                    //         const Icon(Icons.check_circle, color: Colors.green, size: 20),
+                    //         const SizedBox(width: 8),
+                    //         Expanded(
+                    //           child: Text(
+                    //             'Booking as: ${currentUser.email}',
+                    //             style: const TextStyle(
+                    //               color: Colors.green,
+                    //               fontWeight: FontWeight.w500,
+                    //             ),
+                    //             overflow: TextOverflow.ellipsis,
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    //   const SizedBox(height: 12),
+                    // ],
                     
                     ElevatedButton(
                       onPressed: currentUser != null 

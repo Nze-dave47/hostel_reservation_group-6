@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class PaystackWebviewService {
 
-  static const String _secretKey = 'sk_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'; 
+  static const String _secretKey = 'sk_live_6770238bc80d11a2bedcbb03757b33e453f88850'; 
   
   // Initialize transaction and get checkout URL
   Future<String?> initializeTransaction({
@@ -26,7 +26,7 @@ class PaystackWebviewService {
         },
         body: jsonEncode({
           'email': email,
-          'amount': 150 * 100, // Convert to kobo
+          'amount': 60 * 100, // Convert to kobo
           'reference': reference,
           'currency': 'NGN',
           'metadata': metadata,
