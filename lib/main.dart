@@ -54,19 +54,11 @@ final _router = GoRouter(
       },
     ),
 
-    GoRoute(
-      path: '/complaints',
-      builder: (context, state) => ComplaintPage(),
-    ),
+    GoRoute(path: '/complaints', builder: (context, state) => ComplaintPage()),
 
-    GoRoute(
-      path: '/reviews',
-      builder: (context, state) => ReviewPage(),
-    ),
+    GoRoute(path: '/reviews', builder: (context, state) => ReviewPage()),
 
-    GoRoute(
-      path: '/feedback',
-      builder: (context, state) => FeedbackScreen(),
+    GoRoute(path: '/feedback', builder: (context, state) => FeedbackScreen()),
     GoRoute(
       path: '/admin/rooms',
       builder: (context, state) => const ManageRoomsScreen(),
