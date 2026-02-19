@@ -4,14 +4,19 @@ import 'package:go_router/go_router.dart';
 import 'package:hostel_reservation/registration_screen.dart';
 import 'package:hostel_reservation/sign_in_screen.dart';
 import 'package:hostel_reservation/splash_screen.dart';
-import 'data_seeder.dart';
+//import 'data_seeder.dart';
 import 'firebase_options.dart';
 import 'screens/home_screen.dart';
 import 'screens/hostel_list_screen.dart';
 import 'screens/hostel_detail_screen.dart';
 import 'screens/room_selection_screen.dart';
+import 'screens/complaint_page.dart';
+import 'screens/review_page.dart';
+import 'screens/feedback_screen.dart';
 import 'screens/admin/manage_rooms_screen.dart';
 import 'screens/admin/add_edit_room_screen.dart';
+import 'screens/user_profile.dart';
+import 'sign_in_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,15 +32,13 @@ final _router = GoRouter(
   routes: [
     GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
     GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
-    
-    // Auth routes
     GoRoute(path: '/signin', builder: (context, state) => const SignInScreen()),
-    GoRoute(path: '/register', builder: (context, state) => const RegistrationScreen()),
 
     GoRoute(
       path: '/hostels',
       builder: (context, state) => const HostelListScreen(),
     ),
+
     GoRoute(
       path: '/hostel/:id',
       builder: (context, state) {
@@ -44,6 +47,7 @@ final _router = GoRouter(
         return HostelDetailScreen(hostelId: id, hostelData: data);
       },
     ),
+
     GoRoute(
       path: '/hostel/:id/rooms',
       builder: (context, state) {
@@ -51,6 +55,20 @@ final _router = GoRouter(
         return RoomSelectionScreen(hostelId: id);
       },
     ),
+
+    GoRoute(
+      path: '/complaints',
+      builder: (context, state) => ComplaintPage(),
+    ),
+
+    GoRoute(
+      path: '/reviews',
+      builder: (context, state) => ReviewPage(),
+    ),
+
+    GoRoute(
+      path: '/feedback',
+      builder: (context, state) => FeedbackScreen(),
     GoRoute(
       path: '/admin/rooms',
       builder: (context, state) => const ManageRoomsScreen(),
@@ -66,6 +84,11 @@ final _router = GoRouter(
         final data = state.extra as Map<String, dynamic>?;
         return AddEditRoomScreen(roomId: id, initialData: data);
       },
+    ),
+    //user profile route
+    GoRoute(
+      path: '/profile',
+      builder: (context, state) => const UserProfileScreen(),
     ),
   ],
 );

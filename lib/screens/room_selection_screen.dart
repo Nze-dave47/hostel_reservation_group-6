@@ -16,6 +16,7 @@ class RoomSelectionScreen extends StatefulWidget {
 }
 
 class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
+  Map<String, dynamic>? _selectedRoomData; // Added
   String? _selectedRoomTypeId;
   String? _selectedRoomId;
   Map<String, dynamic>? _selectedRoomData;
@@ -452,24 +453,18 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
   Future<void> _initiatePayment(
     Map<String, dynamic> roomData,
     String roomId,
-    int price,
   ) async {
-    final user = _auth.currentUser;
-    if (user == null) {
-      print('❌ [RoomSelection] No user logged in, cannot initiate payment');
-      return;
-    }
+    print(roomData);
+    // Get room price
+    int price = roomData['price'] is int
+        ? roomData['price']
+        : int.tryParse(roomData['price'].toString()) ?? 1000;
 
-    print('💰 [RoomSelection] ========== INITIATING PAYMENT ==========');
-    print('📧 User Email: ${user.email}');
-    print('🆔 User ID: ${user.uid}');
-    print('💰 Price: ₦$price');
-    print('🏠 Room: ${roomData['name']} (ID: $roomId)');
-    print('🏨 Hostel ID: ${widget.hostelId}');
+    // Generate unique reference
+    final reference = paystackService.generateReference();
 
-    // Generate unique reference with user ID
-    final reference = '${user.uid}_${paystackService.generateReference()}';
-    print('🔖 Generated Reference: $reference');
+    // Use test email - NO LOGIN REQUIRED
+    const testEmail = 'customer@example.com';
 
     // Navigate to Paystack WebView with user email
     print('🔄 Navigating to Paystack WebView...');
@@ -496,7 +491,7 @@ class _RoomSelectionScreenState extends State<RoomSelectionScreen> {
     if (paymentSuccessful == true && mounted) {
       setState(() {
         _selectedRoomId = null;
-        _selectedRoomData = null;
+        // _selectedRoomData = null;
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
