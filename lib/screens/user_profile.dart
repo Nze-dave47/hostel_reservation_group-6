@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:hostel_reservation/app_theme.dart';
 import 'package:hostel_reservation/widgets/app_footer.dart';
 
+import 'package:hostel_reservation/features/cancel/cancel_button.dart';
+
 // ─── Derived palette from AppTheme ───────────────────────────────────────────
 // Primary  : AppTheme.primaryColor  = Color(0xFF008000)  – FUTO Green
 // Light    : _kGreenLight           = Color(0xFF4CAF50)  – lighter accent
@@ -350,7 +352,12 @@ class _UserProfileScreenState extends State<UserProfileScreen>
               }
               return Column(
                 children: docs.map((doc) {
-                  final data = doc.data() as Map<String, dynamic>;
+                final data = doc.data() as Map<String, dynamic>;
+                
+                final bookingId = doc.id;
+                final paymentReference = data['paymentReference'] ?? '';
+                final status = data['status'] ?? 'confirmed';
+                final isCancelled = status == 'cancelled';
                   return _TransactionTile(data: data);
                 }).toList(),
               );
@@ -798,16 +805,27 @@ class _HostelDetailsTab extends StatelessWidget {
       child: StreamBuilder<QuerySnapshot>(
         stream: userId != null
             ? firestore
-                  .collection('bookings')
-                  .where('userId', isEqualTo: userId)
-                  .orderBy('createdAt', descending: true)
-                  .snapshots()
+            //Made a change here removed orderby (RemzyArts)
+              .collection('bookings')
+              .where('userId', isEqualTo: userId)
+              .snapshots()
             : const Stream.empty(),
         builder: (context, snap) {
           if (snap.connectionState == ConnectionState.waiting) {
             return const _LoadingCard();
           }
-          final docs = snap.data?.docs ?? [];
+
+          //made another change here too (RemzyArts)
+            final docs = snap.data?.docs ?? [];
+
+            docs.sort((a, b) {
+              final aTime = (a['createdAt'] as Timestamp?)?.toDate();
+              final bTime = (b['createdAt'] as Timestamp?)?.toDate();
+
+              if (aTime == null || bTime == null) return 0;
+
+              return bTime.compareTo(aTime);
+            });
           if (docs.isEmpty) {
             return const _EmptyCard(
               icon: Icons.hotel_outlined,
@@ -1019,8 +1037,12 @@ class _BookingTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final hostelId = data['hostelId'] as String?;
     final roomName = data['roomName'] ?? 'Room';
-    final status = data['status'] ?? 'active';
-    final isActive = status == 'active';
+    final status = data['status'] ?? 'confirmed';
+    final isActive = status != 'cancelled';
+
+    final bookingId = docId;
+    final paymentReference = data['paymentReference'] ?? '';
+    final isCancelled = status == 'cancelled';
 
     return FutureBuilder<DocumentSnapshot>(
       future: hostelId != null
@@ -1040,80 +1062,110 @@ class _BookingTile extends StatelessWidget {
               width: 1.5,
             ),
           ),
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.horizontal(
-                  left: Radius.circular(10),
-                ),
-                child: imageUrl != null
-                    ? Image.network(
-                        imageUrl,
-                        width: 72,
-                        height: 72,
-                        fit: BoxFit.cover,
-                      )
-                    : Container(
-                        width: 72,
-                        height: 72,
-                        color: _kGreenPale,
-                        child: Icon(
-                          Icons.hotel_rounded,
-                          color: AppTheme.primaryColor,
-                        ),
-                      ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        hostelName,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: _kDark,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        roomName,
-                        style: const TextStyle(color: _kGreyText, fontSize: 12),
-                      ),
-                    ],
+
+              // ================= ROW =================
+              Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.horizontal(
+                      left: Radius.circular(10),
+                    ),
+                    child: imageUrl != null
+                        ? Image.network(
+                            imageUrl,
+                            width: 72,
+                            height: 72,
+                            fit: BoxFit.cover,
+                          )
+                        : Container(
+                            width: 72,
+                            height: 72,
+                            color: _kGreenPale,
+                            child: Icon(
+                              Icons.hotel_rounded,
+                              color: AppTheme.primaryColor,
+                            ),
+                          ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 12),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isActive ? _kGreenPale : Colors.grey[100],
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    status,
-                    style: TextStyle(
-                      color: isActive ? AppTheme.primaryColor : _kGreyText,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            hostelName,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  color: _kDark,
+                                ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            roomName,
+                            style: const TextStyle(
+                              color: _kGreyText,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isActive
+                            ? _kGreenPale
+                            : Colors.grey[100],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        status,
+                        style: TextStyle(
+                          color: isActive
+                              ? AppTheme.primaryColor
+                              : _kGreyText,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 12),
+
+              CancelButton(
+                bookingId: bookingId,
+                paymentReference: paymentReference,
+                isCancelled: isCancelled,
+                hostelName: hostelName,
+                roomName: roomName,
+                imageUrl: data['imageUrl'] ?? '',
+                amount: (data['amount'] ?? 0).toDouble(),
+                createdAt: (data['createdAt'] as Timestamp).toDate(),
               ),
             ],
           ),
         );
-      },
-    );
-  }
-}
+      },   // <-- closes FutureBuilder builder
+    );     // <-- closes FutureBuilder
+  }        // <-- closes build method
+}          // <-- closes _BookingTile class
 
 class _LoadingCard extends StatelessWidget {
   const _LoadingCard();
